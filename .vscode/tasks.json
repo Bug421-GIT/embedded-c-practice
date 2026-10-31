@@ -1,0 +1,38 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "gcc: 编译当前文件",
+            "type": "shell",
+            "command": "D:/Software/mingw64/mingw64/bin/gcc.exe",
+            "args": [
+                "-g", "-Wall", "-Wextra", "-std=c17",
+                "${file}",
+                "-o", "${workspaceFolder}/bin/${fileBasenameNoExtension}.exe"
+            ],
+            "group": { "kind": "build", "isDefault": true },
+            "problemMatcher": ["$gcc"],
+            "options": { "cwd": "${workspaceFolder}" }
+        },
+        {
+            "label": "gcc: 生成汇编",
+            "type": "shell",
+            "command": "D:/Software/mingw64/mingw64/bin/gcc.exe",
+            "args": [
+                "-S", "-O2", "-masm=intel",
+                "${file}",
+                "-o", "${workspaceFolder}/bin/${fileBasenameNoExtension}.s"
+            ],
+            "problemMatcher": [],
+            "options": { "cwd": "${workspaceFolder}" }
+        },
+        {
+            "label": "gcc: 编译并运行",
+            "type": "shell",
+            "command": "${workspaceFolder}/bin/${fileBasenameNoExtension}.exe",
+            "dependsOn": "gcc: 编译当前文件",
+            "group": { "kind": "test", "isDefault": true },
+            "problemMatcher": []
+        }
+    ]
+}

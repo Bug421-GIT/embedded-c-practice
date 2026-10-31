@@ -1,0 +1,19 @@
+# 编译产物
+bin/
+*.exe
+*.o
+*.obj
+*.s
+*.i
+
+# 编辑器
+.vs/
+.vscode/settings.json
+*.user
+*.suo
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.log
