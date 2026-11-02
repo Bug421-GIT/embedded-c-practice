@@ -24,7 +24,16 @@
 
 ## 编译与运行
 
-需要 GCC（本项目在 MinGW-w64 GCC 16.2.0 上验证，GCC 9+ 应均可）。
+需要 GCC。本项目在 **MinGW-w64 GCC 16.2.0** 上验证，GCC 9+ 应均可。
+
+### 方式一：VSCode（推荐）
+
+1. 用 VSCode 打开**本目录**（`.vscode/tasks.json` 在这里）
+2. 打开任意 `.c` 文件
+3. `Ctrl+Shift+B` 编译到 `bin/`
+4. `Ctrl+Shift+P` → `Tasks: Run Task` → `gcc: 编译并运行`
+
+### 方式二：命令行
 
 ```bash
 # 编译
@@ -37,14 +46,37 @@ gcc -g -Wall -Wextra -std=c17 c-basics/bit01.c -o bin/bit01
 gcc -S -O2 -masm=intel c-basics/volatile-nv.c -o bin/volatile-nv.s
 ```
 
-### VSCode
+### 找不到 gcc 怎么办
 
-1. 用 VSCode 打开**本目录**（`.vscode/tasks.json` 在这里）
-2. 打开任意 `.c` 文件
-3. `Ctrl+Shift+B` 编译到 `bin/`
-4. `Ctrl+Shift+P` → `Tasks: Run Task` → `gcc: 编译并运行`
+`tasks.json` 不写死编译器路径，而是调用 `scripts/gcc.ps1` 按顺序自动查找：
 
-> `tasks.json` 里写死了本地 MinGW 路径，**在别的机器上要改 `command` 字段**，或者直接用上面的命令行。
+| 顺序 | 来源 |
+|---|---|
+| 1 | `-Compiler` 参数显式指定 |
+| 2 | 环境变量 `MINGW_HOME` 下的 `bin\gcc.exe` |
+| 3 | `PATH` 上的 `gcc` |
+| 4 | 常见安装位置（`C:\mingw64`、`C:\msys64\mingw64` 等） |
+
+**推荐做法**：把 MinGW 的 `bin` 目录加进 `PATH`。
+
+```powershell
+# 只对当前用户生效，重开终端后可用
+[Environment]::SetEnvironmentVariable(
+    "Path",
+    [Environment]::GetEnvironmentVariable("Path", "User") + ";D:\Software\mingw64\mingw64\bin",
+    "User"
+)
+```
+
+如果不想改 `PATH`，改用环境变量：
+
+```powershell
+[Environment]::SetEnvironmentVariable("MINGW_HOME", "D:\Software\mingw64\mingw64", "User")
+```
+
+也可以直接在 `.vscode/tasks.json` 的 args 里加 `"-Compiler", "你的gcc路径"`。
+
+> `scripts/gcc.ps1` 是纯 ASCII 的——Windows PowerShell 5.1 会把无 BOM 的 UTF-8 当 ANSI 读，中文串会被截断。改这个脚本时**保持 ASCII**。
 
 ---
 
@@ -53,6 +85,7 @@ gcc -S -O2 -masm=intel c-basics/volatile-nv.c -o bin/volatile-nv.s
 ```
 .
 ├── .vscode/            # VSCode 编译任务
+├── scripts/gcc.ps1     # 编译器定位 + 编译包装脚本
 ├── c-basics/           # 全部练习源码
 └── bin/                # 产物（.exe / .s），已在 .gitignore 中排除
 ```
@@ -124,7 +157,7 @@ STM32 的 BSRR 低 16 位写 1 置位、高 16 位写 1 复位。**同时写同�
 
 - `volatile-irq.c` 用 `CreateThread` 模拟中断，**仅 Windows**，Linux / macOS 编译不过。它只用于演示「不加 volatile 会卡死」。
 - **`volatile-nv.c` / `volatile-v.c` / `volatile-irq.c` 运行会挂住**——`while` 循环等一个永远不变的变量，本来就是这个演示的目的。要么在终端里 `Ctrl+C` 结束，要么只看 `-S` 生成的汇编，不要直接跑。
-- `tasks.json` 里的编译器路径是本机绝对路径，换机器要改。
+- `scripts/gcc.ps1` 依赖 PowerShell，非 Windows 环境请直接用命令行编译。
 - 源码是 UTF-8。Windows 控制台默认代码页（GBK）下中文 `printf` 会乱码，先 `chcp 65001` 或改用 Windows Terminal。
 - 这是**学习练习**，不是生产代码：没有测试框架，靠 `main()` 里的 `printf` 肉眼校验。
 

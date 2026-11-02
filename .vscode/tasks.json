@@ -4,11 +4,12 @@
         {
             "label": "gcc: 编译当前文件",
             "type": "shell",
-            "command": "D:/Software/mingw64/mingw64/bin/gcc.exe",
+            "command": "powershell",
             "args": [
-                "-g", "-Wall", "-Wextra", "-std=c17",
-                "${file}",
-                "-o", "${workspaceFolder}/bin/${fileBasenameNoExtension}.exe"
+                "-NoProfile", "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}/scripts/gcc.ps1",
+                "-Source", "${file}",
+                "-Output", "${workspaceFolder}/bin/${fileBasenameNoExtension}.exe"
             ],
             "group": { "kind": "build", "isDefault": true },
             "problemMatcher": ["$gcc"],
@@ -17,11 +18,13 @@
         {
             "label": "gcc: 生成汇编",
             "type": "shell",
-            "command": "D:/Software/mingw64/mingw64/bin/gcc.exe",
+            "command": "powershell",
             "args": [
-                "-S", "-O2", "-masm=intel",
-                "${file}",
-                "-o", "${workspaceFolder}/bin/${fileBasenameNoExtension}.s"
+                "-NoProfile", "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}/scripts/gcc.ps1",
+                "-Source", "${file}",
+                "-Output", "${workspaceFolder}/bin/${fileBasenameNoExtension}.s",
+                "-Asm"
             ],
             "problemMatcher": [],
             "options": { "cwd": "${workspaceFolder}" }
@@ -32,7 +35,8 @@
             "command": "${workspaceFolder}/bin/${fileBasenameNoExtension}.exe",
             "dependsOn": "gcc: 编译当前文件",
             "group": { "kind": "test", "isDefault": true },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "options": { "cwd": "${workspaceFolder}" }
         }
     ]
 }
