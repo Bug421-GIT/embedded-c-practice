@@ -9,6 +9,7 @@ bin/
 # 编辑器
 .vs/
 .vscode/settings.json
+.vscode/launch.json
 *.user
 *.suo
 .DS_Store
@@ -18,16 +19,12 @@ Thumbs.db
 *.tmp
 *.log
 
-# ---- 以下不属于本仓库（embedded-c-practice 只放嵌入式 C）----
-# 前端 / 上位机练习脚本：验证脚本、手写实现、临时对拍
 *.mjs
 *.js
 package.json
 package-lock.json
 
-# Electron 离线安装包（94.8MB，别进版本库）
-electron-*.zip
-electron-*.tgz
-
-# JS 调试配置（本目录的 C 项目不需要）
-.vscode/launch.json
+frontend/
+hmi/
+scratch/
+vendor/

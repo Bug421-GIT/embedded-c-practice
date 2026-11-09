@@ -90,10 +90,6 @@ gcc -S -O2 -masm=intel c-basics/volatile-nv.c -o bin/volatile-nv.s
 └── bin/                # 产物（.exe / .s），已在 .gitignore 中排除
 ```
 
-> 本目录里还有一批 `.mjs` 脚本（深拷贝验收、EventBus、Modbus 切帧与 CRC 校验、算法专题验收）。
-> 那是**前端 / 上位机方向**的练习，不属于这个仓库，已在 `.gitignore` 里排除 `*.mjs`。
-> 它们留在本地，笔记里按 `07-code/xxx.mjs` 引用。
-
 | 文件 | 第几题 / 内容 |
 |---|---|
 | `bit01.c` | 置位 / 清位 / 读位，最小示例 |
